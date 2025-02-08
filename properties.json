@@ -1,0 +1,69 @@
+[
+    {
+      "interestedPropertyId": "1",
+      "address": "123 Maple St",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90001",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "squareFeet": 1800,
+      "askingPrice": 750000
+    },
+    {
+      "interestedPropertyId": "2",
+      "address": "456 Oak Ave",
+      "city": "Austin",
+      "state": "TX",
+      "zip": "73301",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "squareFeet": 2200,
+      "askingPrice": 525000
+    },
+    {
+      "interestedPropertyId": "3",
+      "address": "789 Pine Ln",
+      "city": "Seattle",
+      "state": "WA",
+      "zip": "98101",
+      "bedrooms": 2,
+      "bathrooms": 1.5,
+      "squareFeet": 1400,
+      "askingPrice": 600000
+    },
+    {
+      "interestedPropertyId": "4",
+      "address": "101 Birch Dr",
+      "city": "Denver",
+      "state": "CO",
+      "zip": "80202",
+      "bedrooms": 5,
+      "bathrooms": 4,
+      "squareFeet": 3200,
+      "askingPrice": 890000
+    },
+    {
+      "interestedPropertyId": "5",
+      "address": "202 Cedar Ct",
+      "city": "Miami",
+      "state": "FL",
+      "zip": "33101",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "squareFeet": 1750,
+      "askingPrice": 475000
+    },
+    {
+      "interestedPropertyId": "6",
+      "address": "303 Willow Blvd",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": "60601",
+      "bedrooms": 4,
+      "bathrooms": 2.5,
+      "squareFeet": 2500,
+      "askingPrice": 695000
+    }
+  ]
+  

@@ -63,6 +63,7 @@ const updateContact = async (req, res) => {
           zip: req.body.zip,
         },
         preapproved: req.body.preapproved,
+        interestedPropertyID: req.body.interestedPropertyID,
       },
     };
 
