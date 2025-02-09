@@ -201,8 +201,8 @@
             "example": "no"
           },
           "interestedPropertyId": {
-            "type": "string",
-            "example": "4",
+            "type": "object",
+            "example": { "$oid": "67a7e7dff30cda8e20ffd3c9" },
             "description": "ID of the property the contact is interested in"
           }
         }
