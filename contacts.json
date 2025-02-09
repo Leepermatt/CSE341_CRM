@@ -11,7 +11,7 @@
       "zip": "62704"
     },
     "preapproved": "yes",
-    "interestedPropertyId": "6"
+    "interestedPropertyId": { "$oid": "67a7e7dff30cda8e20ffd3c8" }
   },
   {
     "firstName": "Jane",
@@ -25,7 +25,7 @@
       "zip": "60616"
     },
     "preapproved": "no",
-    "interestedPropertyId": "2"
+    "interestedPropertyId": { "$oid": "67a7e7dff30cda8e20ffd3cc" }
   },
   {
     "firstName": "Michael",
@@ -39,7 +39,7 @@
       "zip": "90012"
     },
     "preapproved": "yes",
-    "interestedPropertyId": "1"
+    "interestedPropertyId": { "$oid": "67a7e7dff30cda8e20ffd3c9" }
   },
   {
     "firstName": "Emily",
@@ -53,6 +53,6 @@
       "zip": "10001"
     },
     "preapproved": "no",
-    "interestedPropertyId": "4"
+    "interestedPropertyId": { "$oid": "67a7e7dff30cda8e20ffd3c8" }
   }
 ]
