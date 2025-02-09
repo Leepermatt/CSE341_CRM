@@ -145,7 +145,5 @@ const addContact = async (req, res) => {
 module.exports = {
   getAll,
   getIndividual,
-  addContact,
-  updateContact,
-  deletePerson,
+  addContact
 };
