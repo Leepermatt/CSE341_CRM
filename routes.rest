@@ -71,6 +71,27 @@ POST https://cse341-crm.onrender.com/contacts HTTP/1.1 Content-Type: application
       "interestedPropertyID": { "$oid": "67a7e7dff30cda8e20ffd3c9" }
     }
 
+### Put contact by id
+PUT https://cse341-crm.onrender.com/contacts/67a7fc61fc503e88110f911a HTTP/1.1 Content-Type: application/json
+
+    {
+      "firstName": "Molly",
+      "lastName": "Bussiness",
+      "phone": "444-987-6543",
+      "email": "molly#example.com",
+      "address": {
+        "street": "321 Pine Ln",
+        "city": "New York",
+        "state": "NY",
+        "zip": "10001"
+      },
+      "preapproved": "yes",
+      "interestedPropertyID": { "$oid": "67a7e7dff30cda8e20ffd3c9" }
+    }
+
+### Delete contact by id
+DELETE https://cse341-crm.onrender.com/contacts/67a7ff6efc503e88110f911c
+
 
 
 
