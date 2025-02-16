@@ -36,6 +36,6 @@ const saveContact = async (req, res, next) => {
     };
 
     module.exports = {
-        saveContact,
+        saveContact
     };
 

@@ -44,7 +44,7 @@ PUT http://localhost:3000/contacts/67a7f2d7f30cda8e20ffd3dc HTTP/1.1 Content-Typ
 
 
 ### Delete contact by id
-DELETE http://localhost:3000/contacts/67a7ff6efc503e88110f911c
+DELETE http://localhost:3000/contacts/67b129a1bc474d8b95c06cb6
 
 // PRODUCTION ###
 ### VIEW ALL CONTACTS

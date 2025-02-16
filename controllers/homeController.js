@@ -2,29 +2,29 @@ const mongodb = require('../db/connect');
 const ObjectId = require('mongodb').ObjectId;
 
 
-const getAll = async (req, res) => {
-  const result = await mongodb.getDb().db().collection('contacts').find();
-  result.toArray().then((lists) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(lists);
-  });
-};
-
-
 // const getAll = async (req, res) => {
-// mongodb
-// .getDb()
-// .db()
-// .collection('contacts')
-// .find()
-// .toArray((err, lists) => {
-// if (err) {
-//   res.status(400).json({ message: err});
-// }
-// res.setHeader('Content-Type', 'application/json');
-// res.status(200).json(lists);
-// });
+//   const result = await mongodb.getDb().db().collection('contacts').find();
+//   result.toArray().then((lists) => {
+//     res.setHeader('Content-Type', 'application/json');
+//     res.status(200).json(lists);
+//   });
 // };
+
+
+const getAll = async (req, res) => {
+mongodb
+.getDb()
+.db()
+.collection('contacts')
+.find()
+.toArray((err, lists) => {
+if (err) {
+  res.status(400).json({ message: err});
+}
+res.setHeader('Content-Type', 'application/json');
+res.status(200).json(lists);
+});
+};
 
 // const getAll = async (req, res) => {
 //   try {
@@ -102,20 +102,21 @@ module.exports = {
 const addContact = async (req, res) => {
   try {
     const newContact = {
-      firstName,
-      lastName,
-      phone,
-      email,
-      address: {
-        street: address.street,
-        city: address.city,
-        state: address.state,
-        zip: address.zip,
+      $set: {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phone: req.body.phone,
+        email: req.body.email,
+        address: {
+          street: req.body.street,
+          city: req.body.city,
+          state: req.body.state,
+          zip: req.body.zip,
+        },
+        preapproved: req.body.preapproved,
+        interestedPropertyId: req.body.interestedPropertyId,
       },
-      preapproved,
-      interestedPropertyId,
     };
-
     const result = await mongodb.getDb().db().collection('contacts').insertOne(newContact);
 
     if (result.acknowledged) {
@@ -145,7 +146,7 @@ const updateContact = async (req, res) => {
           zip: req.body.zip,
         },
         preapproved: req.body.preapproved,
-        interestedPropertyID: req.body.interestedPropertyId,
+        interestedPropertyId: req.body.interestedPropertyId,
       },
     };
 
