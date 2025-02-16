@@ -25,6 +25,10 @@ app.use((req, res, next) => {
 // Mount routes
 app.use('/', homeRoute);
 
+process.on('unhandledRejection', (err, Origin) => {
+  console.log(process.stderr.fd, 'Caught exception: ${err}\n' + 'Exception origin: ${Origin}');
+  
+});
 
 // Database Initialization and Server Start
 mongodb.initDb((err, db) => {

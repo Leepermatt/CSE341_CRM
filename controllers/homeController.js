@@ -2,12 +2,21 @@ const mongodb = require('../db/connect');
 const ObjectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {
-  const result = await mongodb.getDb().db().collection('contacts').find();
-  result.toArray().then((lists) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(lists);
-  });
+mongodb
+.getDb()
+.db()
+.collection('contacts')
+.find()
+.toArray((err, lists) => {
+if (err) {
+  res.status(400).json({ message: err});
+}
+res.setHeader('Content-Type', 'application/json');
+res.status(200).json(lists);
+});
 };
+
+
 
 // const getIndividual = async (req, res) => {
 //   const userId = new ObjectId(req.params.id);
@@ -48,10 +57,10 @@ const getIndividual = async (req, res) => {
       .toArray();
 
     if (result.length === 0) {
-      return res.status(404).json({ message: 'Contact not found' });
+      return res.status(400).json({ message: 'Contact not found' });
     }
 
-    res.status(200).json(result[0]); // Return the contact with the property details
+    res.status(204).json(result[0]); // Return the contact with the property details
   } catch (error) {
     res.status(500).json({ message: 'Error fetching contact with property details' });
   }
@@ -81,7 +90,7 @@ const addContact = async (req, res) => {
     const result = await mongodb.getDb().db().collection('contacts').insertOne(newContact);
 
     if (result.acknowledged) {
-      res.status(201).json({ message: 'Contact added successfully', id: result.insertedId });
+      res.status(204).json({ message: 'Contact added successfully', id: result.insertedId });
     } else {
       res.status(500).json({ message: 'Failed to add contact' });
     }
@@ -114,11 +123,11 @@ const updateContact = async (req, res) => {
     const result = await mongodb.getDb().db().collection('contacts').updateOne({ _id: userId }, updatedContact);
 
     if (result.matchedCount === 0) {
-      res.status(404).json({ message: 'Contact not found' });
+      res.status(500).json({ message: 'Contact not found' });
     } else if (result.modifiedCount === 0) {
-      res.status(200).json({ message: 'No changes made to the contact' });
+      res.status(204).json({ message: 'No changes made to the contact' });
     } else {
-      res.status(200).json({ message: 'Contact updated successfully' });
+      res.status(204).json({ message: 'Contact updated successfully' });
     }
   } catch (err) {
     console.error(err);
@@ -132,10 +141,10 @@ const deletePerson = async (req, res) => {
     const result = await mongodb.getDb().db().collection('contacts').deleteOne({ _id: userId });
 
     if (result.deletedCount === 0) {
-      return res.status(404).json({ message: 'Contact not found' });
+      return res.status(500).json({ message: 'Contact not found' });
     }
 
-    res.status(200).json({ message: 'Contact deleted successfully' });
+    res.status(204).json({ message: 'Contact deleted successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'An error occurred while deleting the contact' });
