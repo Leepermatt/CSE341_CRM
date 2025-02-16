@@ -1,12 +1,14 @@
 {
     "dependencies": {
+        "body-parser": "^1.20.3",
         "dotenv": "^16.4.7",
         "eslint": "^9.17.0",
         "express": "^4.21.2",
         "mongodb": "^6.13.0",
         "swagger": "^0.7.5",
         "swagger-ui-express": "^5.0.1",
-        "validator": "^13.12.0"
+        "validator": "^13.12.0",
+        "validatorjs": "^3.22.1"
     },
     "name": "cse341_crm",
     "version": "1.0.0",

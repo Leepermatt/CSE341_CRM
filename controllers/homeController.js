@@ -1,22 +1,50 @@
 const mongodb = require('../db/connect');
 const ObjectId = require('mongodb').ObjectId;
 
+
 const getAll = async (req, res) => {
-mongodb
-.getDb()
-.db()
-.collection('contacts')
-.find()
-.toArray((err, lists) => {
-if (err) {
-  res.status(400).json({ message: err});
-}
-res.setHeader('Content-Type', 'application/json');
-res.status(200).json(lists);
-});
+  const result = await mongodb.getDb().db().collection('contacts').find();
+  result.toArray().then((lists) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(lists);
+  });
 };
 
 
+// const getAll = async (req, res) => {
+// mongodb
+// .getDb()
+// .db()
+// .collection('contacts')
+// .find()
+// .toArray((err, lists) => {
+// if (err) {
+//   res.status(400).json({ message: err});
+// }
+// res.setHeader('Content-Type', 'application/json');
+// res.status(200).json(lists);
+// });
+// };
+
+// const getAll = async (req, res) => {
+//   try {
+//     const lists = await mongodb
+//       .getDb()
+//       .db()
+//       .collection('contacts')
+//       .find()
+//       .toArray();  // Use async/await to handle the result.
+
+//     if (lists.length === 0) {
+//       return res.status(404).json({ message: 'No contacts found' });
+//     }
+
+//     res.setHeader('Content-Type', 'application/json');
+//     res.status(200).json(lists);  // Return the contacts as a JSON array
+//   } catch (err) {
+//     res.status(500).json({ message: 'Error retrieving contacts', error: err });
+//   }
+// };
 
 // const getIndividual = async (req, res) => {
 //   const userId = new ObjectId(req.params.id);
@@ -74,17 +102,18 @@ module.exports = {
 const addContact = async (req, res) => {
   try {
     const newContact = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      phone: req.body.phone,
-      email: req.body.email,
+      firstName,
+      lastName,
+      phone,
+      email,
       address: {
-        street: req.body.street,
-        city: req.body.city,
-        state: req.body.state,
-        zip: req.body.zip,
+        street: address.street,
+        city: address.city,
+        state: address.state,
+        zip: address.zip,
       },
-      preapproved: req.body.preapproved, // Expecting "yes" or "no"
+      preapproved,
+      interestedPropertyId,
     };
 
     const result = await mongodb.getDb().db().collection('contacts').insertOne(newContact);
@@ -116,7 +145,7 @@ const updateContact = async (req, res) => {
           zip: req.body.zip,
         },
         preapproved: req.body.preapproved,
-        interestedPropertyID: req.body.interestedPropertyID,
+        interestedPropertyID: req.body.interestedPropertyId,
       },
     };
 
