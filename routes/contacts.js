@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+//app.use(express.json());  // This is required!
 const contactsController = require('../controllers/homeController');
 const validate = require('../middleware/validate');
 

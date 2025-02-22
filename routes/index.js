@@ -13,7 +13,7 @@ const express = require('express');
 
 const router = express.Router();
 const contactsRoutes = require('./contacts');
-
+//app.use(express.json());  // This is required!
 // Handle GET /contacts directly here or rely on contactsRoutes to handle it
 router.get('/contacts', (req, res) => {
   // Optionally handle the logic here or pass it to contactsRoutes
