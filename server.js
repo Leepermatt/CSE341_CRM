@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
+
 const homeRoute = require('./routes');
 const mongodb = require('./db/connect');
 
@@ -11,7 +11,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware: body parser and express json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
+  next();
+});
 
 // Set CORS headers
 app.use((req, res, next) => {

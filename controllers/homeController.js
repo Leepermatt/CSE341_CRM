@@ -11,19 +11,32 @@ const ObjectId = require('mongodb').ObjectId;
 // };
 
 
+// const getAll = async (req, res) => {
+// mongodb
+// .getDb()
+// .db()
+// .collection('contacts')
+// .find()
+// .toArray((err, lists) => {
+// if (err) {
+//   res.status(400).json({ message: err});
+// }
+// res.setHeader('Content-Type', 'application/json');
+// res.status(200).json(lists);
+// });
+// };
 const getAll = async (req, res) => {
-mongodb
-.getDb()
-.db()
-.collection('contacts')
-.find()
-.toArray((err, lists) => {
-if (err) {
-  res.status(400).json({ message: err});
-}
-res.setHeader('Content-Type', 'application/json');
-res.status(200).json(lists);
-});
+  try {
+    const contacts = await mongodb.getDb().db().collection('contacts').find().toArray();
+
+    if (!contacts || contacts.length === 0) {
+      return res.status(404).json({ message: 'No contacts found' });
+    }
+
+    res.status(200).json(contacts);
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving contacts', error: err.message });
+  }
 };
 
 // const getAll = async (req, res) => {
@@ -54,73 +67,59 @@ res.status(200).json(lists);
 //     res.status(200).json(lists[0]);
 //   });
 // };
+
 const getIndividual = async (req, res) => {
-  const userId = new ObjectId(req.params.id); // Convert ID to ObjectId
+  const userId = new ObjectId(req.params.id);
 
   try {
     const result = await mongodb.getDb()
       .db()
       .collection('contacts')
       .aggregate([
-        {
-          $match: { _id: userId } // Match the contact by ID
-        },
-        {
+        { $match: { _id: userId } },
+        { 
           $lookup: {
-            from: 'properties', // Name of the other collection where properties are stored
-            localField: 'interestedPropertyId', // Field in contacts that links to properties
-            foreignField: '_id', // Field in properties collection
-            as: 'propertyDetails' // Alias to hold the property details
+            from: 'properties',
+            localField: 'interestedPropertyId',
+            foreignField: '_id',
+            as: 'propertyDetails'
           }
         },
-        {
-          $unwind: { path: '$propertyDetails', preserveNullAndEmptyArrays: true } // Unwind to flatten the array if the contact has a property
-        },
-        {
-          $addFields: {
-            interestedPropertyId: { $toObjectId: "$interestedPropertyId" } // Convert interestedPropertyId to ObjectId
-          }
-        }
+        { $unwind: { path: '$propertyDetails', preserveNullAndEmptyArrays: true } }
       ])
       .toArray();
 
-    if (result.length === 0) {
-      return res.status(400).json({ message: 'Contact not found' });
+    if (!result || result.length === 0) {
+      return res.status(404).json({ message: 'Contact not found' });
     }
 
-    res.status(204).json(result[0]); // Return the contact with the property details
+    res.status(200).json(result[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching contact with property details' });
+    res.status(500).json({ message: 'Error fetching contact', error: error.message });
   }
 };
-
-module.exports = {
-  getIndividual,
-};
-
 
 const addContact = async (req, res) => {
   try {
     const newContact = {
-      $set: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phone: req.body.phone,
-        email: req.body.email,
-        address: {
-          street: req.body.street,
-          city: req.body.city,
-          state: req.body.state,
-          zip: req.body.zip,
-        },
-        preapproved: req.body.preapproved,
-        interestedPropertyId: req.body.interestedPropertyId,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      phone: req.body.phone,
+      email: req.body.email,
+      address: {
+        street: req.body.address?.street,
+        city: req.body.address?.city,
+        state: req.body.address?.state,
+        zip: req.body.address?.zip,
       },
+      preapproved: req.body.preapproved,
+      interestedPropertyId: req.body.interestedPropertyId
     };
+
     const result = await mongodb.getDb().db().collection('contacts').insertOne(newContact);
 
     if (result.acknowledged) {
-      res.status(204).json({ message: 'Contact added successfully', id: result.insertedId });
+      res.status(201).json({ message: 'Contact added successfully', id: result.insertedId });
     } else {
       res.status(500).json({ message: 'Failed to add contact' });
     }
@@ -134,30 +133,31 @@ const updateContact = async (req, res) => {
   try {
     const userId = new ObjectId(req.params.id);
     const updatedContact = {
-      $set: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phone: req.body.phone,
-        email: req.body.email,
-        address: {
-          street: req.body.street,
-          city: req.body.city,
-          state: req.body.state,
-          zip: req.body.zip,
-        },
-        preapproved: req.body.preapproved,
-        interestedPropertyId: req.body.interestedPropertyId,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      phone: req.body.phone,
+      email: req.body.email,
+      address: {
+        street: req.body.address?.street,
+        city: req.body.address?.city,
+        state: req.body.address?.state,
+        zip: req.body.address?.zip,
       },
+      preapproved: req.body.preapproved,
+      interestedPropertyId: req.body.interestedPropertyId
     };
 
-    const result = await mongodb.getDb().db().collection('contacts').updateOne({ _id: userId }, updatedContact);
+    const result = await mongodb.getDb().db().collection('contacts').updateOne(
+      { _id: userId },
+      { $set: updatedContact } // ✅ Move $set here
+    );
 
     if (result.matchedCount === 0) {
-      res.status(500).json({ message: 'Contact not found' });
+      res.status(404).json({ message: 'Contact not found' });
     } else if (result.modifiedCount === 0) {
-      res.status(204).json({ message: 'No changes made to the contact' });
+      res.status(200).json({ message: 'No changes made to the contact' });
     } else {
-      res.status(204).json({ message: 'Contact updated successfully' });
+      res.status(200).json({ message: 'Contact updated successfully' });
     }
   } catch (err) {
     console.error(err);
@@ -171,15 +171,16 @@ const deletePerson = async (req, res) => {
     const result = await mongodb.getDb().db().collection('contacts').deleteOne({ _id: userId });
 
     if (result.deletedCount === 0) {
-      return res.status(500).json({ message: 'Contact not found' });
+      return res.status(404).json({ message: 'Contact not found' });
     }
 
-    res.status(204).json({ message: 'Contact deleted successfully' });
+    res.status(200).json({ message: 'Contact deleted successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'An error occurred while deleting the contact' });
   }
 };
+
 
 module.exports = {
   getAll,
