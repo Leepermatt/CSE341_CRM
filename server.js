@@ -45,11 +45,11 @@ const authRoute = require("./routes/auth"); // Import auth routes
 app.use('/auth', authRoute); // Register authentication routes
 
 // Apply the authMiddleware to the main page or any other routes to protect them
-app.use('/', authMiddleware, homeRoute);  // Protect homeRoute with authMiddleware
+//app.use('/', authMiddleware, homeRoute);  // Protect homeRoute with authMiddleware
 
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+// if (process.env.NODE_ENV !== "production") {
+//   require("dotenv").config();
+// }
 
 // Mount routes
 app.use('/', homeRoute);
