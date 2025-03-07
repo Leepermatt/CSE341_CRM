@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const session = require("express-session");
+const authMiddleware = require("./middleware/auth"); // Import the auth middleware
 const passport = require("passport");
 const homeRoute = require('./routes');
 const mongodb = require('./db/connect');
@@ -42,6 +43,9 @@ app.use(passport.session());
 
 const authRoute = require("./routes/auth"); // Import auth routes
 app.use('/auth', authRoute); // Register authentication routes
+
+// Apply the authMiddleware to the main page or any other routes to protect them
+app.use('/', authMiddleware, homeRoute);  // Protect homeRoute with authMiddleware
 
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
