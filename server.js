@@ -1,9 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-
+const session = require("express-session");
+const passport = require("passport");
 const homeRoute = require('./routes');
 const mongodb = require('./db/connect');
 
+require("./config/passport"); // Load Passport config
 // Initialize express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +28,20 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
+// Express session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Initialize Passport.js
+app.use(passport.initialize());
+app.use(passport.session());
+
+const authRoute = require("./routes/auth"); // Import auth routes
+app.use('/auth', authRoute); // Register authentication routes
 
 // Mount routes
 app.use('/', homeRoute);
