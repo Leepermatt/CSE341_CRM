@@ -43,6 +43,10 @@ app.use(passport.session());
 const authRoute = require("./routes/auth"); // Import auth routes
 app.use('/auth', authRoute); // Register authentication routes
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 // Mount routes
 app.use('/', homeRoute);
 
