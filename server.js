@@ -4,9 +4,10 @@ const session = require("express-session");
 const authMiddleware = require("./middleware/auth"); // Import the auth middleware
 const passport = require("passport");
 const homeRoute = require('./routes');
-const mongodb = require('./db/connect');
+const mongodb = require('./db/connect'); // MongoDB native driver connection
 
 require("./config/passport"); // Load Passport config
+
 // Initialize express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,9 +48,21 @@ app.use('/auth', authRoute); // Register authentication routes
 // Apply the authMiddleware to the main page or any other routes to protect them
 //app.use('/', authMiddleware, homeRoute);  // Protect homeRoute with authMiddleware
 
-// if (process.env.NODE_ENV !== "production") {
-//   require("dotenv").config();
-// }
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  (req, res) => {
+    // On successful authentication, redirect the user to the main page or any protected page
+    res.redirect('/api-docs'); // Or your preferred page
+  });
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).send('Error logging out');
+    }
+    res.redirect('/'); // Redirect to the home page or any other page after logout
+  });
+});
 
 // Mount routes
 app.use('/', homeRoute);

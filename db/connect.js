@@ -1,6 +1,6 @@
+const { MongoClient } = require('mongodb');
 const dotenv = require('dotenv');
 dotenv.config();
-const MongoClient = require('mongodb').MongoClient;
 
 let _db;
 
@@ -9,9 +9,9 @@ const initDb = (callback) => {
     console.log('Db is already initialized!');
     return callback(null, _db);
   }
-  MongoClient.connect(process.env.MONGODB_URI)
+  MongoClient.connect(process.env.MONGODB_URI, { useUnifiedTopology: true })
     .then((client) => {
-      _db = client;
+      _db = client.db();  // Get the database instance
       callback(null, _db);
     })
     .catch((err) => {
@@ -26,7 +26,4 @@ const getDb = () => {
   return _db;
 };
 
-module.exports = {
-  initDb,
-  getDb,
-};
+module.exports = { initDb, getDb };
